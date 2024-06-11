@@ -114,5 +114,27 @@
       };
       document.body.appendChild(script);
     </script>
+    <script>
+        function handleScreenshot(encodedPng) {
+            var image = new Image();
+            image.src = 'data:image/png;base64,' + encodedPng;
+            image.onload = function() {
+                var canvas = document.createElement('canvas');
+                canvas.width = image.width;
+                canvas.height = image.height;
+                var context = canvas.getContext('2d');
+                context.drawImage(image, 0, 0);
+
+                // Try to copy the image to the clipboard
+                canvas.toBlob(function(blob) {
+                    navigator.clipboard.write([new ClipboardItem({'image/png': blob})]).then(function() {
+                        console.log('Screenshot copied to clipboard');
+                    }, function(error) {
+                        console.error('Could not copy screenshot to clipboard: ', error);
+                    });
+                });
+            };
+        }
+    </script>
   </body>
 </html>
