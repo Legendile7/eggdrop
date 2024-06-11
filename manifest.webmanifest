@@ -1,0 +1,15 @@
+{
+    "name": "Nama Eggdrop",
+    "short_name": "Nama Eggdrop",
+    "start_url": "index.html",
+    "display": "fullscreen",
+    "background_color": "#7F1B13",
+    "theme_color": "#000",
+    "description": "Random loadout generator for THE FINALS",
+    "icons": [{
+      "src": "TemplateData/icons/unity-logo-dark.png",
+      "sizes": "144x144",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }]
+  }
