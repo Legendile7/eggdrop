@@ -13,15 +13,16 @@
     <meta property="og:url" content="https://legendile7.github.io/eggdrop" />
     <meta property="og:type" content="website" />
   </head>
+  
   <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-B88E3Z5TK1"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
-
     gtag('config', 'G-B88E3Z5TK1');
   </script>
+
   <body>
     <div id="unity-container">
       <canvas id="unity-canvas" width=960 height=540 tabindex="-1"></canvas>
@@ -31,8 +32,9 @@
           <div id="unity-progress-bar-full"></div>
         </div>
       </div>
-      <div id="unity-warning"> </div>
+      <div id="unity-warning"></div>
     </div>
+
     <script>
       window.addEventListener("load", function () {
         if ("serviceWorker" in navigator) {
@@ -46,12 +48,6 @@
       var progressBarFull = document.querySelector("#unity-progress-bar-full");
       var warningBanner = document.querySelector("#unity-warning");
 
-      // Shows a temporary message banner/ribbon for a few seconds, or
-      // a permanent error message on top of the canvas if type=='error'.
-      // If type=='warning', a yellow highlight color is used.
-      // Modify or remove this function to customize the visually presented
-      // way that non-critical warnings and error messages are presented to the
-      // user.
       function unityShowBanner(msg, type) {
         function updateBannerVisibility() {
           warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
@@ -84,15 +80,7 @@
         showBanner: unityShowBanner,
       };
 
-      // By default Unity keeps WebGL canvas render target size matched with
-      // the DOM size of the canvas element (scaled by window.devicePixelRatio)
-      // Set this to false if you want to decouple this synchronization from
-      // happening inside the engine, and you would instead like to size up
-      // the canvas DOM size and WebGL render target sizes yourself.
-      // config.matchWebGLToCanvasSize = false;
-
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
         var meta = document.createElement('meta');
         meta.name = 'viewport';
         meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
@@ -101,72 +89,80 @@
 
       loadingBar.style.display = "block";
 
+      var unityInstance = null; // Global unityInstance variable
+
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
+        }).then((instance) => {
           loadingBar.style.display = "none";
+          unityInstance = instance; // Store unityInstance globally
+          getBrowserName(); // Call getBrowserName once Unity is ready
         }).catch((message) => {
           alert(message);
         });
       };
       document.body.appendChild(script);
     </script>
-    <script>
-        function handleScreenshot(encodedPng) {
-            var image = new Image();
-            image.src = 'data:image/png;base64,' + encodedPng;
-            image.onload = function() {
-                var canvas = document.createElement('canvas');
-                canvas.width = image.width;
-                canvas.height = image.height;
-                var context = canvas.getContext('2d');
-                context.drawImage(image, 0, 0);
 
-                // Try to copy the image to the clipboard
-                canvas.toBlob(function(blob) {
-                    navigator.clipboard.write([new ClipboardItem({'image/png': blob})]).then(function() {
-                        console.log('Screenshot copied to clipboard');
-                    }, function(error) {
-                        console.error('Could not copy screenshot to clipboard: ', error);
-                    });
-                });
-            };
-        }
-        function copyToClipboard(text) {
-            navigator.clipboard.writeText(text).then(function() {
-                console.log('Text copied to clipboard successfully!');
-            }, function(err) {
-                console.error('Could not copy text: ', err);
+    <script>
+      function handleScreenshot(encodedPng) {
+        var image = new Image();
+        image.src = 'data:image/png;base64,' + encodedPng;
+        image.onload = function() {
+          var canvas = document.createElement('canvas');
+          canvas.width = image.width;
+          canvas.height = image.height;
+          var context = canvas.getContext('2d');
+          context.drawImage(image, 0, 0);
+
+          canvas.toBlob(function(blob) {
+            navigator.clipboard.write([new ClipboardItem({'image/png': blob})]).then(function() {
+              console.log('Screenshot copied to clipboard');
+            }, function(error) {
+              console.error('Could not copy screenshot to clipboard: ', error);
             });
-        }
+          });
+        };
+      }
+
+      function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(function() {
+          console.log('Text copied to clipboard successfully!');
+        }, function(err) {
+          console.error('Could not copy text: ', err);
+        });
+      }
     </script>
+
     <script type="text/javascript">
       function getBrowserName() {
-          var userAgent = navigator.userAgent;
-          var browserName = "Unknown Browser";
-  
-          if (userAgent.indexOf("Chrome") > -1) {
-              browserName = "Chrome";
-          } else if (userAgent.indexOf("Safari") > -1) {
-              browserName = "Safari";
-          } else if (userAgent.indexOf("Firefox") > -1) {
-              browserName = "Firefox";
-          } else if (userAgent.indexOf("MSIE") > -1 || !!document.documentMode === true) {
-              browserName = "Internet Explorer";
-          } else if (userAgent.indexOf("Edge") > -1) {
-              browserName = "Edge";
-          }
-  
-          // Send the browser name to Unity
-          SendMessage('GameObjectName', 'ReceiveBrowserName', browserName);
+        var userAgent = navigator.userAgent;
+        var browserName = "Unknown Browser";
+
+        if (userAgent.indexOf("Chrome") > -1) {
+          browserName = "Chrome";
+        } else if (userAgent.indexOf("Safari") > -1) {
+          browserName = "Safari";
+        } else if (userAgent.indexOf("Firefox") > -1) {
+          browserName = "Firefox";
+        } else if (userAgent.indexOf("MSIE") > -1 || !!document.documentMode === true) {
+          browserName = "Internet Explorer";
+        } else if (userAgent.indexOf("Edge") > -1) {
+          browserName = "Edge";
+        }
+
+        if (unityInstance != null) {
+          unityInstance.SendMessage('Manager', 'ReceiveBrowserName', browserName);
+        } else {
+          console.error('Unity instance is not ready');
+        }
       }
-  
-      // Call this function when the WebGL content loads
+
       window.onload = function() {
-          getBrowserName();
+        getBrowserName();
       };
     </script>
   </body>
