@@ -144,6 +144,8 @@
         }
     </script>
     <script type="text/javascript">
+      var unityInstance = null; // Store unityInstance globally
+  
       function getBrowserName() {
           var userAgent = navigator.userAgent;
           var browserName = "Unknown Browser";
@@ -160,14 +162,18 @@
               browserName = "Edge";
           }
   
-          // Send the browser name to Unity
-          SendMessage('Manager', 'ReceiveBrowserName', browserName);
+          // Ensure unityInstance is available before sending the message
+          if (unityInstance != null) {
+              unityInstance.SendMessage('Manager', 'ReceiveBrowserName', browserName);
+          } else {
+              console.error('Unity instance is not ready');
+          }
       }
   
-      // Call this function when the WebGL content loads
+      // This function runs when the WebGL content loads
       window.onload = function() {
-          getBrowserName();
+          getBrowserName(); // Detect browser after the page has fully loaded
       };
-    </script>
+    </script>  
   </body>
 </html>
