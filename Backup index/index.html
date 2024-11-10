@@ -67,12 +67,12 @@
       }
 
       var buildUrl = "Build";
-      var loaderUrl = buildUrl + "/eggdrop.loader.js";
+      var loaderUrl = buildUrl + "/c540a15cb75b099c2d69ffb6b50986bc.loader.js";
       var config = {
         arguments: [],
-        dataUrl: buildUrl + "/eggdrop.data",
-        frameworkUrl: buildUrl + "/eggdrop.framework.js",
-        codeUrl: buildUrl + "/eggdrop.wasm",
+        dataUrl: buildUrl + "/314206eab8c82a1818874af6a007564e.data.br",
+        frameworkUrl: buildUrl + "/6b575e2889e8bb6772ed99ee94738f4a.framework.js.br",
+        codeUrl: buildUrl + "/ff7753749c63b04ea6d1975cc2a734b9.wasm.br",
         streamingAssetsUrl: "StreamingAssets",
         companyName: "Overshock Games",
         productName: "Nama's Eggdrop",
@@ -89,17 +89,13 @@
 
       loadingBar.style.display = "block";
 
-      var unityInstance = null; // Global unityInstance variable
-
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
-        }).then((instance) => {
+        }).then((unityInstance) => {
           loadingBar.style.display = "none";
-          unityInstance = instance; // Store unityInstance globally
-          getBrowserName(); // Call getBrowserName once Unity is ready
         }).catch((message) => {
           alert(message);
         });
