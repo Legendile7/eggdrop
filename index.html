@@ -89,13 +89,17 @@
 
       loadingBar.style.display = "block";
 
+      var unityInstance = null; // Global unityInstance variable
+
       var script = document.createElement("script");
       script.src = loaderUrl;
       script.onload = () => {
         createUnityInstance(canvas, config, (progress) => {
           progressBarFull.style.width = 100 * progress + "%";
-        }).then((unityInstance) => {
+        }).then((instance) => {
           loadingBar.style.display = "none";
+          unityInstance = instance; // Store unityInstance globally
+          getBrowserName(); // Call getBrowserName once Unity is ready
         }).catch((message) => {
           alert(message);
         });
