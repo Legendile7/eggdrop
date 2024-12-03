@@ -73,10 +73,9 @@
         dataUrl: buildUrl + "/eggdrop.data.unityweb",
         frameworkUrl: buildUrl + "/eggdrop.framework.js.unityweb",
         codeUrl: buildUrl + "/eggdrop.wasm.unityweb",
-        streamingAssetsUrl: "StreamingAssets",
         companyName: "Overshock Games",
         productName: "Nama's Eggdrop",
-        productVersion: "1.4.2",
+        productVersion: "1.4.3",
         showBanner: unityShowBanner,
       };
 
@@ -135,35 +134,6 @@
           console.error('Could not copy text: ', err);
         });
       }
-    </script>
-
-    <script type="text/javascript">
-      function getBrowserName() {
-        var userAgent = navigator.userAgent;
-        var browserName = "Unknown Browser";
-
-        if (userAgent.indexOf("Chrome") > -1) {
-          browserName = "Chrome";
-        } else if (userAgent.indexOf("Safari") > -1) {
-          browserName = "Safari";
-        } else if (userAgent.indexOf("Firefox") > -1) {
-          browserName = "Firefox";
-        } else if (userAgent.indexOf("MSIE") > -1 || !!document.documentMode === true) {
-          browserName = "Internet Explorer";
-        } else if (userAgent.indexOf("Edge") > -1) {
-          browserName = "Edge";
-        }
-
-        if (unityInstance != null) {
-          unityInstance.SendMessage('Manager', 'ReceiveBrowserName', browserName);
-        } else {
-          console.error('Unity instance is not ready');
-        }
-      }
-
-      window.onload = function() {
-        getBrowserName();
-      };
     </script>
   </body>
 </html>
