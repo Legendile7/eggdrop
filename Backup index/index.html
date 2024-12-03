@@ -98,7 +98,6 @@
         }).then((instance) => {
           loadingBar.style.display = "none";
           unityInstance = instance; // Store unityInstance globally
-          getBrowserName(); // Call getBrowserName once Unity is ready
         }).catch((message) => {
           alert(message);
         });
